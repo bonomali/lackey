@@ -9,6 +9,7 @@ import lackey
 import numpy
 
 from .appveyor_test_cases import *
+import pytest
 
 # Python 3 compatibility
 try:
@@ -33,7 +34,7 @@ class TestKeyboardMethods(unittest.TestCase):
         lackey.type("a", lackey.Key.CTRL)
         lackey.type("c", lackey.Key.CTRL)
 
-        self.assertEqual(lackey.getClipboard(), expected)
+        assert lackey.getClipboard() == expected
 
     def test_keys(self):
         self.kb.keyDown("{SHIFT}")
@@ -89,12 +90,12 @@ class TestComplexFeatures(unittest.TestCase):
             r.type("This is a Test")
             r.type("a", lackey.Key.CTRL) # Select all
             r.type("c", lackey.Key.CTRL) # Copy
-            self.assertEqual(r.getClipboard(), "This is a Test")
+            assert r.getClipboard() == "This is a Test"
             r.type("{DELETE}") # Clear the selected text
             r.paste("This, on the other hand, is a {SHIFT}broken {SHIFT}record.") # Paste should ignore special characters and insert the string as is
             r.type("a", lackey.Key.CTRL) # Select all
             r.type("c", lackey.Key.CTRL) # Copy
-            self.assertEqual(r.getClipboard(), "This, on the other hand, is a {SHIFT}broken {SHIFT}record.")
+            assert r.getClipboard() == "This, on the other hand, is a {SHIFT}broken {SHIFT}record."
         elif sys.platform == "darwin":
             app = lackey.App("+open -e")
             lackey.sleep(2)
@@ -107,12 +108,12 @@ class TestComplexFeatures(unittest.TestCase):
             r.type("This is a Test")
             r.type("a", lackey.KeyModifier.CMD) # Select all
             r.type("c", lackey.KeyModifier.CMD) # Copy
-            self.assertEqual(r.getClipboard(), "This is a Test")
+            assert r.getClipboard() == "This is a Test"
             r.type("{DELETE}") # Clear the selected text
             r.paste("This, on the other hand, is a {SHIFT}broken {SHIFT}record.") # Paste should ignore special characters and insert the string as is
             r.type("a", lackey.KeyModifier.CMD) # Select all
             r.type("c", lackey.KeyModifier.CMD) # Copy
-            self.assertEqual(r.getClipboard(), "This, on the other hand, is a {SHIFT}broken {SHIFT}record.")
+            assert r.getClipboard() == "This, on the other hand, is a {SHIFT}broken {SHIFT}record."
         else:
             raise NotImplementedError("Platforms supported include: Windows, OS X")
 
@@ -120,7 +121,7 @@ class TestComplexFeatures(unittest.TestCase):
 
         lackey.Debug.setLogFile(None)
 
-        self.assertTrue(os.path.exists("logfile.txt"))
+        assert os.path.exists("logfile.txt")
 
     def testOpenApp(self):
         """ This looks for the specified Notepad icon on the desktop.
@@ -147,8 +148,8 @@ class TestComplexFeatures(unittest.TestCase):
         elif sys.platform == "darwin":
             r.onAppear(lackey.Pattern("mac_test_text.png").similar(0.6), test_observer)
         r.observe(30)
-        self.assertTrue(r.TestFlag)
-        self.assertGreater(r.getTime(), 0)
+        assert r.TestFlag
+        assert r.getTime() > 0
         if sys.platform.startswith("win"):
             r.rightClick(r.getLastMatch())
             r.click("select_all.png")
@@ -156,7 +157,7 @@ class TestComplexFeatures(unittest.TestCase):
         elif sys.platform == "darwin":
             r.type("a", lackey.KeyModifier.CMD)
             r.type("c", lackey.KeyModifier.CMD)
-        self.assertEqual(r.getClipboard(), "This is a test")
+        assert r.getClipboard() == "This is a test"
         r.type("{DELETE}")
         if sys.platform.startswith("win"):
             r.type("{F4}", lackey.Key.ALT)
@@ -174,11 +175,11 @@ class TestComplexFeatures(unittest.TestCase):
         r = lackey.Screen(0)
         if sys.platform.startswith("win"):
             r.dragDrop("test_file_txt.png", "notepad.png")
-            self.assertTrue(r.exists("test_file_txt.png"))
+            assert r.exists("test_file_txt.png")
             r.type("{F4}", lackey.Key.ALT)
         elif sys.platform == "darwin":
             r.dragDrop("test_file_rtf.png", "textedit.png")
-            self.assertTrue(r.exists("test_file_rtf.png"))
+            assert r.exists("test_file_rtf.png")
             r.type("w", lackey.KeyModifier.CMD)
             r.type("q", lackey.KeyModifier.CMD)
 
@@ -186,7 +187,7 @@ class TestComplexFeatures(unittest.TestCase):
         """ Sets up a region (which should not have the target icon) """
 
         r = lackey.Screen(0).get(lackey.Region.NORTH_EAST)
-        with self.assertRaises(lackey.FindFailed) as context:
+        with pytest.raises(lackey.FindFailed) as context:
             r.find("notepad.png")
         r.setFindFailedResponse(r.SKIP)
         try:
