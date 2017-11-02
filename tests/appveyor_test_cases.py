@@ -10,17 +10,20 @@ import lackey
 import pytest
 
 
-class TestMouseMethods(unittest.TestCase):
-    def setUp(self):
-        self.mouse = lackey.Mouse()
+@pytest.fixture
+def mouse():
+    return lackey.Mouse()
 
-    def test_movement(self):
-        self.mouse.move(lackey.Location(10, 10))
+
+class TestMouseMethods(object):
+
+    def test_movement(self, mouse):
+        mouse.move(lackey.Location(10, 10))
         lackey.sleep(0.01)
-        assert self.mouse.getPos().getTuple() == (10, 10)
-        self.mouse.moveSpeed(lackey.Location(100, 200), 0.5)
-        assert self.mouse.getPos().getTuple() == (100, 200)
-        lackey.wheel(self.mouse.getPos(), 0, 3) # Mostly just verifying it doesn't crash
+        assert mouse.getPos().getTuple() == (10, 10)
+        mouse.moveSpeed(lackey.Location(100, 200), 0.5)
+        assert mouse.getPos().getTuple() == (100, 200)
+        lackey.wheel(mouse.getPos(), 0, 3) # Mostly just verifying it doesn't crash
 
 class TestKeyboardMethods(unittest.TestCase):
     def setUp(self):
