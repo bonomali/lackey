@@ -9,11 +9,6 @@ import re
 import lackey
 import pytest
 
-# Python 2/3 compatibility
-try:
-    unittest.TestCase.assertRegex
-except AttributeError:
-    unittest.TestCase.assertRegex =  unittest.TestCase.assertRegexpMatches
 
 class TestMouseMethods(unittest.TestCase):
     def setUp(self):
