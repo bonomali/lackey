@@ -365,7 +365,7 @@ class TestObserverEventMethods(unittest.TestCase):
         with pytest.raises(TypeError) as context:
             self.generic_event.getChanges()
 
-class TestInterfaces(unittest.TestCase):
+class TestInterfaces(object):
     """ This class tests Sikuli interface compatibility on a surface level.
     Makes sure the class has the correct methods, and that the methods have the
     expected number of arguments.
@@ -373,223 +373,220 @@ class TestInterfaces(unittest.TestCase):
     def test_app_interface(self):
         """ Checking App class interface methods """
         ## Class methods
-        self.assertHasMethod(lackey.App, "pause", 2)
-        self.assertHasMethod(lackey.App, "open", 2)
-        self.assertHasMethod(lackey.App, "focus", 2)
-        self.assertHasMethod(lackey.App, "close", 2)
-        self.assertHasMethod(lackey.App, "focusedWindow", 1)
+        has_method(lackey.App, "pause", 2)
+        has_method(lackey.App, "open", 2)
+        has_method(lackey.App, "focus", 2)
+        has_method(lackey.App, "close", 2)
+        has_method(lackey.App, "focusedWindow", 1)
 
         ## Instance methods
         app = lackey.App()
-        self.assertHasMethod(app, "__init__", 2)
-        self.assertHasMethod(app, "isRunning", 2)
-        self.assertHasMethod(app, "hasWindow", 1)
-        self.assertHasMethod(app, "getWindow", 1)
-        self.assertHasMethod(app, "getPID", 1)
-        self.assertHasMethod(app, "getName", 1)
-        self.assertHasMethod(app, "setUsing", 2)
-        self.assertHasMethod(app, "open", 2)
-        self.assertHasMethod(app, "focus", 1)
-        self.assertHasMethod(app, "close", 1)
-        self.assertHasMethod(app, "window", 2)
+        has_method(app, "__init__", 2)
+        has_method(app, "isRunning", 2)
+        has_method(app, "hasWindow", 1)
+        has_method(app, "getWindow", 1)
+        has_method(app, "getPID", 1)
+        has_method(app, "getName", 1)
+        has_method(app, "setUsing", 2)
+        has_method(app, "open", 2)
+        has_method(app, "focus", 1)
+        has_method(app, "close", 1)
+        has_method(app, "window", 2)
 
     def test_region_interface(self):
         """ Checking Region class interface methods """
-        self.assertHasMethod(lackey.Region, "__init__", 1) # uses *args
-        self.assertHasMethod(lackey.Region, "setX", 2)
-        self.assertHasMethod(lackey.Region, "setY", 2)
-        self.assertHasMethod(lackey.Region, "setW", 2)
-        self.assertHasMethod(lackey.Region, "setH", 2)
-        self.assertHasMethod(lackey.Region, "moveTo", 2)
-        self.assertHasMethod(lackey.Region, "setROI", 1)   # uses *args
-        self.assertHasMethod(lackey.Region, "setRect", 1)  # uses *args
-        self.assertHasMethod(lackey.Region, "morphTo", 2)
-        self.assertHasMethod(lackey.Region, "getX", 1)
-        self.assertHasMethod(lackey.Region, "getY", 1)
-        self.assertHasMethod(lackey.Region, "getW", 1)
-        self.assertHasMethod(lackey.Region, "getH", 1)
-        self.assertHasMethod(lackey.Region, "getTopLeft", 1)
-        self.assertHasMethod(lackey.Region, "getTopRight", 1)
-        self.assertHasMethod(lackey.Region, "getBottomLeft", 1)
-        self.assertHasMethod(lackey.Region, "getBottomRight", 1)
-        self.assertHasMethod(lackey.Region, "getScreen", 1)
-        self.assertHasMethod(lackey.Region, "getLastMatch", 1)
-        self.assertHasMethod(lackey.Region, "getLastMatches", 1)
-        self.assertHasMethod(lackey.Region, "getTime", 1)
-        self.assertHasMethod(lackey.Region, "isRegionValid", 1)
-        self.assertHasMethod(lackey.Region, "setAutoWaitTimeout", 2)
-        self.assertHasMethod(lackey.Region, "getAutoWaitTimeout", 1)
-        self.assertHasMethod(lackey.Region, "setWaitScanRate", 2)
-        self.assertHasMethod(lackey.Region, "getWaitScanRate", 1)
-        self.assertHasMethod(lackey.Region, "get", 2)
-        self.assertHasMethod(lackey.Region, "getRow", 3)
-        self.assertHasMethod(lackey.Region, "getCol", 3)
-        self.assertHasMethod(lackey.Region, "setRows", 2)
-        self.assertHasMethod(lackey.Region, "setCols", 2)
-        self.assertHasMethod(lackey.Region, "setRaster", 3)
-        self.assertHasMethod(lackey.Region, "getCell", 3)
-        self.assertHasMethod(lackey.Region, "isRasterValid", 1)
-        self.assertHasMethod(lackey.Region, "getRows", 1)
-        self.assertHasMethod(lackey.Region, "getCols", 1)
-        self.assertHasMethod(lackey.Region, "getRowH", 1)
-        self.assertHasMethod(lackey.Region, "getColW", 1)
-        self.assertHasMethod(lackey.Region, "offset", 3)
-        self.assertHasMethod(lackey.Region, "inside", 1)
-        self.assertHasMethod(lackey.Region, "grow", 3)
-        self.assertHasMethod(lackey.Region, "nearby", 2)
-        self.assertHasMethod(lackey.Region, "above", 2)
-        self.assertHasMethod(lackey.Region, "below", 2)
-        self.assertHasMethod(lackey.Region, "left", 2)
-        self.assertHasMethod(lackey.Region, "right", 2)
-        self.assertHasMethod(lackey.Region, "find", 2)
-        self.assertHasMethod(lackey.Region, "findAll", 2)
-        self.assertHasMethod(lackey.Region, "wait", 3)
-        self.assertHasMethod(lackey.Region, "waitVanish", 3)
-        self.assertHasMethod(lackey.Region, "exists", 3)
-        self.assertHasMethod(lackey.Region, "click", 3)
-        self.assertHasMethod(lackey.Region, "doubleClick", 3)
-        self.assertHasMethod(lackey.Region, "rightClick", 3)
-        self.assertHasMethod(lackey.Region, "highlight", 1) # Uses *args
-        self.assertHasMethod(lackey.Region, "hover", 2)
-        self.assertHasMethod(lackey.Region, "dragDrop", 4)
-        self.assertHasMethod(lackey.Region, "drag", 2)
-        self.assertHasMethod(lackey.Region, "dropAt", 3)
-        self.assertHasMethod(lackey.Region, "type", 1) 		# Uses *args
-        self.assertHasMethod(lackey.Region, "paste", 1)		# Uses *args
-        self.assertHasMethod(lackey.Region, "text", 1)
-        self.assertHasMethod(lackey.Region, "mouseDown", 2)
-        self.assertHasMethod(lackey.Region, "mouseUp", 2)
-        self.assertHasMethod(lackey.Region, "mouseMove", 3)
-        self.assertHasMethod(lackey.Region, "wheel", 1)     # Uses *args
-        self.assertHasMethod(lackey.Region, "keyDown", 2)
-        self.assertHasMethod(lackey.Region, "keyUp", 2)
+        has_method(lackey.Region, "__init__", 1) # uses *args
+        has_method(lackey.Region, "setX", 2)
+        has_method(lackey.Region, "setY", 2)
+        has_method(lackey.Region, "setW", 2)
+        has_method(lackey.Region, "setH", 2)
+        has_method(lackey.Region, "moveTo", 2)
+        has_method(lackey.Region, "setROI", 1)   # uses *args
+        has_method(lackey.Region, "setRect", 1)  # uses *args
+        has_method(lackey.Region, "morphTo", 2)
+        has_method(lackey.Region, "getX", 1)
+        has_method(lackey.Region, "getY", 1)
+        has_method(lackey.Region, "getW", 1)
+        has_method(lackey.Region, "getH", 1)
+        has_method(lackey.Region, "getTopLeft", 1)
+        has_method(lackey.Region, "getTopRight", 1)
+        has_method(lackey.Region, "getBottomLeft", 1)
+        has_method(lackey.Region, "getBottomRight", 1)
+        has_method(lackey.Region, "getScreen", 1)
+        has_method(lackey.Region, "getLastMatch", 1)
+        has_method(lackey.Region, "getLastMatches", 1)
+        has_method(lackey.Region, "getTime", 1)
+        has_method(lackey.Region, "isRegionValid", 1)
+        has_method(lackey.Region, "setAutoWaitTimeout", 2)
+        has_method(lackey.Region, "getAutoWaitTimeout", 1)
+        has_method(lackey.Region, "setWaitScanRate", 2)
+        has_method(lackey.Region, "getWaitScanRate", 1)
+        has_method(lackey.Region, "get", 2)
+        has_method(lackey.Region, "getRow", 3)
+        has_method(lackey.Region, "getCol", 3)
+        has_method(lackey.Region, "setRows", 2)
+        has_method(lackey.Region, "setCols", 2)
+        has_method(lackey.Region, "setRaster", 3)
+        has_method(lackey.Region, "getCell", 3)
+        has_method(lackey.Region, "isRasterValid", 1)
+        has_method(lackey.Region, "getRows", 1)
+        has_method(lackey.Region, "getCols", 1)
+        has_method(lackey.Region, "getRowH", 1)
+        has_method(lackey.Region, "getColW", 1)
+        has_method(lackey.Region, "offset", 3)
+        has_method(lackey.Region, "inside", 1)
+        has_method(lackey.Region, "grow", 3)
+        has_method(lackey.Region, "nearby", 2)
+        has_method(lackey.Region, "above", 2)
+        has_method(lackey.Region, "below", 2)
+        has_method(lackey.Region, "left", 2)
+        has_method(lackey.Region, "right", 2)
+        has_method(lackey.Region, "find", 2)
+        has_method(lackey.Region, "findAll", 2)
+        has_method(lackey.Region, "wait", 3)
+        has_method(lackey.Region, "waitVanish", 3)
+        has_method(lackey.Region, "exists", 3)
+        has_method(lackey.Region, "click", 3)
+        has_method(lackey.Region, "doubleClick", 3)
+        has_method(lackey.Region, "rightClick", 3)
+        has_method(lackey.Region, "highlight", 1) # Uses *args
+        has_method(lackey.Region, "hover", 2)
+        has_method(lackey.Region, "dragDrop", 4)
+        has_method(lackey.Region, "drag", 2)
+        has_method(lackey.Region, "dropAt", 3)
+        has_method(lackey.Region, "type", 1) 		# Uses *args
+        has_method(lackey.Region, "paste", 1)		# Uses *args
+        has_method(lackey.Region, "text", 1)
+        has_method(lackey.Region, "mouseDown", 2)
+        has_method(lackey.Region, "mouseUp", 2)
+        has_method(lackey.Region, "mouseMove", 3)
+        has_method(lackey.Region, "wheel", 1)     # Uses *args
+        has_method(lackey.Region, "keyDown", 2)
+        has_method(lackey.Region, "keyUp", 2)
         # Event Handler Methods
-        self.assertHasMethod(lackey.Region, "onAppear", 3)
-        self.assertHasMethod(lackey.Region, "onVanish", 3)
-        self.assertHasMethod(lackey.Region, "onChange", 3)
-        self.assertHasMethod(lackey.Region, "isChanged", 3)
-        self.assertHasMethod(lackey.Region, "observe", 2)
-        self.assertHasMethod(lackey.Region, "observeInBackground", 2)
-        self.assertHasMethod(lackey.Region, "stopObserver", 1)
-        self.assertHasMethod(lackey.Region, "hasObserver", 1)
-        self.assertHasMethod(lackey.Region, "isObserving", 1)
-        self.assertHasMethod(lackey.Region, "hasEvents", 1)
-        self.assertHasMethod(lackey.Region, "getEvents", 1)
-        self.assertHasMethod(lackey.Region, "getEvent", 2)
-        self.assertHasMethod(lackey.Region, "setInactive", 2)
-        self.assertHasMethod(lackey.Region, "setActive", 2)
+        has_method(lackey.Region, "onAppear", 3)
+        has_method(lackey.Region, "onVanish", 3)
+        has_method(lackey.Region, "onChange", 3)
+        has_method(lackey.Region, "isChanged", 3)
+        has_method(lackey.Region, "observe", 2)
+        has_method(lackey.Region, "observeInBackground", 2)
+        has_method(lackey.Region, "stopObserver", 1)
+        has_method(lackey.Region, "hasObserver", 1)
+        has_method(lackey.Region, "isObserving", 1)
+        has_method(lackey.Region, "hasEvents", 1)
+        has_method(lackey.Region, "getEvents", 1)
+        has_method(lackey.Region, "getEvent", 2)
+        has_method(lackey.Region, "setInactive", 2)
+        has_method(lackey.Region, "setActive", 2)
         # FindFailed event methods
-        self.assertHasMethod(lackey.Region, "setFindFailedResponse", 2)
-        self.assertHasMethod(lackey.Region, "setFindFailedHandler", 2)
-        self.assertHasMethod(lackey.Region, "getFindFailedResponse", 1)
-        self.assertHasMethod(lackey.Region, "setThrowException", 2)
-        self.assertHasMethod(lackey.Region, "getThrowException", 1)
-        self.assertHasMethod(lackey.Region, "_raiseFindFailed", 2)
-        self.assertHasMethod(lackey.Region, "_findFailedPrompt", 2)
+        has_method(lackey.Region, "setFindFailedResponse", 2)
+        has_method(lackey.Region, "setFindFailedHandler", 2)
+        has_method(lackey.Region, "getFindFailedResponse", 1)
+        has_method(lackey.Region, "setThrowException", 2)
+        has_method(lackey.Region, "getThrowException", 1)
+        has_method(lackey.Region, "_raiseFindFailed", 2)
+        has_method(lackey.Region, "_findFailedPrompt", 2)
 
     def test_pattern_interface(self):
         """ Checking App class interface methods """
-        self.assertHasMethod(lackey.Pattern, "__init__", 2)
-        self.assertHasMethod(lackey.Pattern, "similar", 2)
-        self.assertHasMethod(lackey.Pattern, "exact", 1)
-        self.assertHasMethod(lackey.Pattern, "targetOffset", 3)
-        self.assertHasMethod(lackey.Pattern, "getFilename", 1)
-        self.assertHasMethod(lackey.Pattern, "getTargetOffset", 1)
+        has_method(lackey.Pattern, "__init__", 2)
+        has_method(lackey.Pattern, "similar", 2)
+        has_method(lackey.Pattern, "exact", 1)
+        has_method(lackey.Pattern, "targetOffset", 3)
+        has_method(lackey.Pattern, "getFilename", 1)
+        has_method(lackey.Pattern, "getTargetOffset", 1)
 
     def test_match_interface(self):
         """ Checking Match class interface methods """
-        self.assertHasMethod(lackey.Match, "getScore", 1)
-        self.assertHasMethod(lackey.Match, "getTarget", 1)
+        has_method(lackey.Match, "getScore", 1)
+        has_method(lackey.Match, "getTarget", 1)
 
     def test_location_interface(self):
         """ Checking Location class interface methods """
-        self.assertHasMethod(lackey.Location, "__init__", 3)
-        self.assertHasMethod(lackey.Location, "getX", 1)
-        self.assertHasMethod(lackey.Location, "getY", 1)
-        self.assertHasMethod(lackey.Location, "setLocation", 3)
-        self.assertHasMethod(lackey.Location, "offset", 3)
-        self.assertHasMethod(lackey.Location, "above", 2)
-        self.assertHasMethod(lackey.Location, "below", 2)
-        self.assertHasMethod(lackey.Location, "left", 2)
-        self.assertHasMethod(lackey.Location, "right", 2)
+        has_method(lackey.Location, "__init__", 3)
+        has_method(lackey.Location, "getX", 1)
+        has_method(lackey.Location, "getY", 1)
+        has_method(lackey.Location, "setLocation", 3)
+        has_method(lackey.Location, "offset", 3)
+        has_method(lackey.Location, "above", 2)
+        has_method(lackey.Location, "below", 2)
+        has_method(lackey.Location, "left", 2)
+        has_method(lackey.Location, "right", 2)
 
     def test_screen_interface(self):
         """ Checking Screen class interface methods """
-        self.assertHasMethod(lackey.Screen, "__init__", 2)
-        self.assertHasMethod(lackey.Screen, "getNumberScreens", 1)
-        self.assertHasMethod(lackey.Screen, "getBounds", 1)
-        self.assertHasMethod(lackey.Screen, "capture", 1) 			# Uses *args
-        self.assertHasMethod(lackey.Screen, "selectRegion", 2)
+        has_method(lackey.Screen, "__init__", 2)
+        has_method(lackey.Screen, "getNumberScreens", 1)
+        has_method(lackey.Screen, "getBounds", 1)
+        has_method(lackey.Screen, "capture", 1) 			# Uses *args
+        has_method(lackey.Screen, "selectRegion", 2)
 
     def test_platform_manager_interface(self):
         """ Checking Platform Manager interface methods """
 
         ## Screen methods
-        self.assertHasMethod(lackey.PlatformManager, "getBitmapFromRect", 5)
-        self.assertHasMethod(lackey.PlatformManager, "getScreenBounds", 2)
-        self.assertHasMethod(lackey.PlatformManager, "getScreenDetails", 1)
-        self.assertHasMethod(lackey.PlatformManager, "isPointVisible", 3)
+        has_method(lackey.PlatformManager, "getBitmapFromRect", 5)
+        has_method(lackey.PlatformManager, "getScreenBounds", 2)
+        has_method(lackey.PlatformManager, "getScreenDetails", 1)
+        has_method(lackey.PlatformManager, "isPointVisible", 3)
 
         ## Clipboard methods
-        self.assertHasMethod(lackey.PlatformManager, "osCopy", 1)
-        self.assertHasMethod(lackey.PlatformManager, "osPaste", 1)
+        has_method(lackey.PlatformManager, "osCopy", 1)
+        has_method(lackey.PlatformManager, "osPaste", 1)
 
         ## Window methods
-        self.assertHasMethod(lackey.PlatformManager, "getWindowByTitle", 3)
-        self.assertHasMethod(lackey.PlatformManager, "getWindowByPID", 3)
-        self.assertHasMethod(lackey.PlatformManager, "getWindowRect", 2)
-        self.assertHasMethod(lackey.PlatformManager, "focusWindow", 2)
-        self.assertHasMethod(lackey.PlatformManager, "getWindowTitle", 2)
-        self.assertHasMethod(lackey.PlatformManager, "getWindowPID", 2)
-        self.assertHasMethod(lackey.PlatformManager, "getForegroundWindow", 1)
+        has_method(lackey.PlatformManager, "getWindowByTitle", 3)
+        has_method(lackey.PlatformManager, "getWindowByPID", 3)
+        has_method(lackey.PlatformManager, "getWindowRect", 2)
+        has_method(lackey.PlatformManager, "focusWindow", 2)
+        has_method(lackey.PlatformManager, "getWindowTitle", 2)
+        has_method(lackey.PlatformManager, "getWindowPID", 2)
+        has_method(lackey.PlatformManager, "getForegroundWindow", 1)
 
         ## Process methods
-        self.assertHasMethod(lackey.PlatformManager, "isPIDValid", 2)
-        self.assertHasMethod(lackey.PlatformManager, "killProcess", 2)
-        self.assertHasMethod(lackey.PlatformManager, "getProcessName", 2)
+        has_method(lackey.PlatformManager, "isPIDValid", 2)
+        has_method(lackey.PlatformManager, "killProcess", 2)
+        has_method(lackey.PlatformManager, "getProcessName", 2)
 
 
-    def assertHasMethod(self, cls, mthd, args=0):
-        """ Custom test to make sure a class has the specified method (and that it takes `args` parameters) """
-        assert callable(getattr(cls, mthd, None))
-        if args > 0:
-            assert len(inspect.getargspec(getattr(cls, mthd))[0]) == args
-
-class TestConvenienceFunctions(unittest.TestCase):
+class TestConvenienceFunctions(object):
     def test_function_defs(self):
-        self.assertHasMethod(lackey, "sleep", 1)
-        self.assertHasMethod(lackey, "exit", 1)
-        self.assertHasMethod(lackey, "setShowActions", 1)
-        self.assertHasMethod(lackey, "getBundlePath", 0)
-        self.assertHasMethod(lackey, "getBundleFolder", 0)
-        self.assertHasMethod(lackey, "setBundlePath", 1)
-        self.assertHasMethod(lackey, "getImagePath", 0)
-        self.assertHasMethod(lackey, "addImagePath", 1)
-        self.assertHasMethod(lackey, "addHTTPImagePath", 1)
-        self.assertHasMethod(lackey, "getParentPath", 0)
-        self.assertHasMethod(lackey, "getParentFolder", 0)
-        self.assertHasMethod(lackey, "makePath", 0) # Uses *args
-        self.assertHasMethod(lackey, "makeFolder", 0) # Uses *args
-        self.assertHasMethod(lackey, "unzip", 2)
-        self.assertHasMethod(lackey, "popat", 0) # Uses *args
-        self.assertHasMethod(lackey, "popup", 2)
-        self.assertHasMethod(lackey, "popError", 2)
-        self.assertHasMethod(lackey, "popAsk", 2)
-        self.assertHasMethod(lackey, "input", 4)
-        self.assertHasMethod(lackey, "inputText", 5)
-        self.assertHasMethod(lackey, "select", 4)
-        self.assertHasMethod(lackey, "popFile", 1)
+        has_method(lackey, "sleep", 1)
+        has_method(lackey, "exit", 1)
+        has_method(lackey, "setShowActions", 1)
+        has_method(lackey, "getBundlePath", 0)
+        has_method(lackey, "getBundleFolder", 0)
+        has_method(lackey, "setBundlePath", 1)
+        has_method(lackey, "getImagePath", 0)
+        has_method(lackey, "addImagePath", 1)
+        has_method(lackey, "addHTTPImagePath", 1)
+        has_method(lackey, "getParentPath", 0)
+        has_method(lackey, "getParentFolder", 0)
+        has_method(lackey, "makePath", 0) # Uses *args
+        has_method(lackey, "makeFolder", 0) # Uses *args
+        has_method(lackey, "unzip", 2)
+        has_method(lackey, "popat", 0) # Uses *args
+        has_method(lackey, "popup", 2)
+        has_method(lackey, "popError", 2)
+        has_method(lackey, "popAsk", 2)
+        has_method(lackey, "input", 4)
+        has_method(lackey, "inputText", 5)
+        has_method(lackey, "select", 4)
+        has_method(lackey, "popFile", 1)
 
     def test_renamed_builtin_functions(self):
         assert lackey.exit_ == sys.exit
         assert lackey.input_ == input
         assert lackey.type_ == type
 
-    def assertHasMethod(self, cls, mthd, args=0):
-        """ Custom test to make sure a class has the specified method (and that it takes `args` parameters) """
-        assert callable(getattr(cls, mthd, None))
-        if args > 0:
-            assert len(inspect.getargspec(getattr(cls, mthd))[0]) == args
+
+def has_method(cls, mthd, args=0):
+    """ Custom test to make sure a class has the specified method
+    (and that it takes `args` parameters) """
+    assert callable(getattr(cls, mthd, None))
+    if args > 0:
+        assert len(inspect.getargspec(getattr(cls, mthd))[0]) == args
+
 
 if __name__ == '__main__':
     unittest.main()
