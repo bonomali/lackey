@@ -137,19 +137,19 @@ class TestScreenMethods(object):
         assert w > 0 # Primary screen should be wider than 0
         assert h > 0 # Primary screen should be taller than 0
 
-    def testCapture(self):
+    def testCapture(self, screen):
         tpath = screen.capture()
         assert isinstance(tpath, numpy.ndarray)
 
 class TestLocationMethods(object):
 
-    def test_getters(self):
+    def test_getters(self, test_loc):
         assert test_loc.getX() == 10
         assert test_loc.getY() == 11
         assert test_loc.getTuple() == (10,11)
         assert str(test_loc) == "(Location object at (10,11))"
 
-    def test_set_location(self):
+    def test_set_location(self, test_loc):
         test_loc.setLocation(3, 5)
         assert test_loc.getX() == 3
         assert test_loc.getY() == 5
@@ -157,7 +157,7 @@ class TestLocationMethods(object):
         assert test_loc.getX() == -3
         assert test_loc.getY() == 1009
 
-    def test_offsets(self):
+    def test_offsets(self, test_loc):
         offset = test_loc.offset(3, -5)
         assert offset.getTuple() == (13,6)
         offset = test_loc.above(10)
@@ -169,7 +169,7 @@ class TestLocationMethods(object):
         offset = test_loc.left(7)
         assert offset.getTuple() == (3,11)
 
-    def test_screen_methods(self):
+    def test_screen_methods(self, test_loc):
         outside_loc = lackey.Location(-10, -10)
         assert outside_loc.getScreen() is None # Should be outside all screens and return None
         assert test_loc.getScreen().getID() == 0 # Test location should be on screen 0
@@ -218,7 +218,8 @@ class TestPatternMethods(unittest.TestCase):
         with pytest.raises(lackey.ImageMissing):
             lackey.Pattern("non_existent_file.png")
 
-class TestRegionMethods(unittest.TestCase):
+
+class TestRegionMethods(object):
 
     def test_constructor(self, screen):
         assert isinstance(lackey.Region(screen), lackey.Region)
@@ -245,7 +246,7 @@ class TestRegionMethods(unittest.TestCase):
             10
         ), lackey.Region)
 
-    def test_changers(self):
+    def test_changers(self, screen):
         # setLocation
         assert screen.getTopLeft() == lackey.Location(0, 0)
         assert screen.setLocation(lackey.Location(10, 10)).getTopLeft() == lackey.Location(10, 10)
@@ -271,7 +272,7 @@ class TestRegionMethods(unittest.TestCase):
         new_region.copyTo(0)
         new_region.copyTo(lackey.Screen(0))
 
-    def test_info(self):
+    def test_info(self, screen):
         assert not screen.contains(lackey.Location(-5, -5))
         new_region = lackey.Region(-10, -10, 5, 5)
         assert not screen.contains(new_region)
@@ -281,7 +282,7 @@ class TestRegionMethods(unittest.TestCase):
         assert screen.containsMouse()
 
 
-    def test_validity_methods(self):
+    def test_validity_methods(self, screen):
         assert screen.isRegionValid()
         clipped = screen.clipRegionToScreen()
         assert clipped is not None
@@ -290,7 +291,7 @@ class TestRegionMethods(unittest.TestCase):
         assert clipped.getW() == screen.getW()
         assert clipped.getH() == screen.getH()
 
-    def test_around_methods(self):
+    def test_around_methods(self, screen):
         center_region = screen.get(lackey.Region.MID_BIG)
         below_region = center_region.below()
         assert below_region.isRegionValid()
@@ -321,7 +322,7 @@ class TestRegionMethods(unittest.TestCase):
         with pytest.raises(ValueError):
             offset_region = left_region.offset(-1000, -1000)
 
-    def test_highlighter(self):
+    def test_highlighter(self, screen):
         center_region = screen.get(lackey.Region.MID_BIG)
         center_region.highlight()
         center_region.highlight(2, "blue")
@@ -330,14 +331,16 @@ class TestRegionMethods(unittest.TestCase):
         time.sleep(1)
         center_region.highlight(False)
 
-    def test_settings(self):
+    def test_settings(self, screen):
         screen.setAutoWaitTimeout(10)
         assert screen.getAutoWaitTimeout() == 10.0
         screen.setWaitScanRate(2)
         assert screen.getWaitScanRate() == 2.0
 
+
+@pytest.mark.usefixtures("screen")
 class TestObserverEventMethods(unittest.TestCase):
-    def setUp(self, screen):
+    def setUp(self):
         self.generic_event = lackey.ObserveEvent(screen, event_type="GENERIC")
         self.appear_event = lackey.ObserveEvent(screen, event_type="APPEAR")
         self.vanish_event = lackey.ObserveEvent(screen, event_type="VANISH")
