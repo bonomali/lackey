@@ -11,6 +11,11 @@ import pytest
 
 
 @pytest.fixture
+def kb():
+    return lackey.Keyboard()
+
+
+@pytest.fixture
 def mouse():
     return lackey.Mouse()
 
@@ -25,15 +30,13 @@ class TestMouseMethods(object):
         assert mouse.getPos().getTuple() == (100, 200)
         lackey.wheel(mouse.getPos(), 0, 3) # Mostly just verifying it doesn't crash
 
-class TestKeyboardMethods(unittest.TestCase):
-    def setUp(self):
-        self.kb = lackey.Keyboard()
+class TestKeyboardMethods(object):
 
-    def test_keys(self):
-        self.kb.keyDown("{SHIFT}")
-        self.kb.keyUp("{CTRL}")
-        self.kb.keyUp("{SHIFT}")
-        self.kb.type("{CTRL}")
+    def test_keys(self, kb):
+        kb.keyDown("{SHIFT}")
+        kb.keyUp("{CTRL}")
+        kb.keyUp("{SHIFT}")
+        kb.type("{CTRL}")
         # Really this should check to make sure these keys have all been released, but
         # I'm not sure how to make that work without continuously monitoring the keyboard
         # (which is the usual scenario). Ah well... if your computer is acting weird after
