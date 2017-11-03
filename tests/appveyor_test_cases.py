@@ -30,6 +30,17 @@ def test_loc():
     return lackey.Location(10, 11)
 
 
+@pytest.fixture
+def pattern_path():
+    return os.path.join("tests", "test_pattern.png")
+
+
+@pytest.fixture
+def pattern(pattern_path):
+    print(pattern_path)
+    return lackey.Pattern(pattern_path)
+
+
 class TestMouseMethods(object):
 
     def test_movement(self, mouse):
@@ -179,39 +190,35 @@ class TestLocationMethods(object):
         assert isinstance(test_loc.getColor(), numpy.ndarray) # No color outside all screens, should return None
 
 
-
-class TestPatternMethods(unittest.TestCase):
-    def setUp(self):
-        self.file_path = os.path.join("tests", "test_pattern.png")
-        self.pattern = lackey.Pattern(self.file_path)
+class TestPatternMethods(object):
     
-    def test_defaults(self):
-        assert self.pattern.similarity == 0.7
-        assert isinstance(self.pattern.offset, lackey.Location)
-        assert self.pattern.offset.getTuple() == (0,0)
-        assert self.pattern.path[-len(self.file_path):] == self.file_path
+    def test_defaults(self, pattern, pattern_path):
+        assert pattern.similarity == 0.7
+        assert isinstance(pattern.offset, lackey.Location)
+        assert pattern.offset.getTuple() == (0,0)
+        assert pattern.path[-len(pattern_path):] == pattern_path
 
-    def test_setters(self):
-        test_pattern = self.pattern.similar(0.5)
+    def test_setters(self, pattern, pattern_path):
+        test_pattern = pattern.similar(0.5)
         assert test_pattern.similarity == 0.5
-        assert test_pattern.path[-len(self.file_path):] == self.file_path
-        test_pattern = self.pattern.exact()
+        assert test_pattern.path[-len(pattern_path):] == pattern_path
+        test_pattern = pattern.exact()
         assert test_pattern.similarity == 1.0
-        assert test_pattern.path[-len(self.file_path):] == self.file_path
-        test_pattern = self.pattern.targetOffset(3, 5)
+        assert test_pattern.path[-len(pattern_path):] == pattern_path
+        test_pattern = pattern.targetOffset(3, 5)
         assert test_pattern.similarity == 0.7
-        assert test_pattern.path[-len(self.file_path):] == self.file_path
+        assert test_pattern.path[-len(pattern_path):] == pattern_path
         assert test_pattern.offset.getTuple() == (3,5)
 
-    def test_getters(self):
-        assert self.pattern.getFilename()[-len(self.file_path):] == self.file_path
-        assert self.pattern.getTargetOffset().getTuple() == (0,0)
-        assert self.pattern.getSimilar() == 0.7
+    def test_getters(self, pattern, pattern_path):
+        assert pattern.getFilename()[-len(pattern_path):] == pattern_path
+        assert pattern.getTargetOffset().getTuple() == (0,0)
+        assert pattern.getSimilar() == 0.7
 
-    def test_constructor(self):
-        cloned_pattern = lackey.Pattern(self.pattern)
+    def test_constructor(self, pattern, pattern_path):
+        cloned_pattern = lackey.Pattern(pattern)
         assert cloned_pattern.isValid()
-        pattern_from_image = lackey.Pattern(self.pattern.getImage())
+        pattern_from_image = lackey.Pattern(pattern.getImage())
         assert pattern_from_image.isImagePattern()
         with pytest.raises(TypeError):
             lackey.Pattern(True)
