@@ -17,37 +17,30 @@ try:
 except NameError:
     basestring = str
 
-@unittest.skipUnless(sys.platform.startswith("win"), "Platforms supported include: Windows")
-class TestKeyboardMethods(unittest.TestCase):
-    def setUp(self):
-        self.kb = lackey.Keyboard()
+@pytest.mark.skipif(not sys.platform.startswith("win"),
+                    reason="Uses Windows feature")
+class TestKeyboardMethods(object):
+
+    @pytest.fixture(autouse=True)
+    def notepad(self):
         self.app = lackey.App("notepad.exe")
         self.app.open()
         time.sleep(1)
-
-    def tearDown(self):
+        yield
         self.app.close()
 
-    def type_and_check_equals(self, typed, expected):
-        self.kb.type(typed)
-        time.sleep(0.2)
-        lackey.type("a", lackey.Key.CTRL)
-        lackey.type("c", lackey.Key.CTRL)
-
-        assert lackey.getClipboard() == expected
-
-    def test_keys(self):
-        self.kb.keyDown("{SHIFT}")
-        self.kb.keyUp("{CTRL}")
-        self.kb.keyUp("{SHIFT}")
-        self.kb.type("{CTRL}")
+    def test_keys(self, kb):
+        kb.keyDown("{SHIFT}")
+        kb.keyUp("{CTRL}")
+        kb.keyUp("{SHIFT}")
+        kb.type("{CTRL}")
         # Really this should check to make sure these keys have all been released, but
         # I'm not sure how to make that work without continuously monitoring the keyboard
         # (which is the usual scenario). Ah well... if your computer is acting weird after
         # you run this test, the SHIFT, CTRL, or ALT keys might not have been released
         # properly.
 
-    def test_parsed_special_codes(self):
+    def test_parsed_special_codes(self, kb):
         OUTPUTS = {
             # Special codes should output the text below.
             # Multiple special codes should be parsed correctly.
@@ -61,8 +54,16 @@ class TestKeyboardMethods(unittest.TestCase):
             "{TEST}{TEST}": "{TEST}{TEST}"
         }
 
+        def type_and_check_equals(typed, expected):
+            kb.type(typed)
+            time.sleep(0.2)
+            lackey.type("a", lackey.Key.CTRL)
+            lackey.type("c", lackey.Key.CTRL)
+
+            assert lackey.getClipboard() == expected
+
         for code in OUTPUTS:
-            self.type_and_check_equals(code, OUTPUTS[code])
+            type_and_check_equals(code, OUTPUTS[code])
 
 
 class TestComplexFeatures(unittest.TestCase):
