@@ -319,9 +319,10 @@ class TestRegionMethods(object):
         assert screen.getWaitScanRate() == 2.0
 
 
-@pytest.mark.usefixtures("screen")
 class TestObserverEventMethods(object):
-    def setup_method(self, method):
+
+    @pytest.fixture(autouse=True)
+    def events(self, screen):
         self.generic_event = lackey.ObserveEvent(screen, event_type="GENERIC")
         self.appear_event = lackey.ObserveEvent(screen, event_type="APPEAR")
         self.vanish_event = lackey.ObserveEvent(screen, event_type="VANISH")
@@ -337,7 +338,7 @@ class TestObserverEventMethods(object):
         assert self.change_event.isChange()
         assert not self.change_event.isGeneric()
 
-    def test_getters(self):
+    def test_getters(self, screen):
         assert self.generic_event.getRegion() == screen
         with pytest.raises(TypeError) as context:
             self.generic_event.getImage()
