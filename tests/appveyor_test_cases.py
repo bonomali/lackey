@@ -10,37 +10,6 @@ import lackey
 import pytest
 
 
-@pytest.fixture()
-def kb():
-    return lackey.Keyboard()
-
-
-@pytest.fixture()
-def mouse():
-    return lackey.Mouse()
-
-
-@pytest.fixture()
-def screen():
-    return lackey.Screen(0)
-
-
-@pytest.fixture()
-def test_loc():
-    return lackey.Location(10, 11)
-
-
-@pytest.fixture()
-def pattern_path():
-    return os.path.join("tests", "test_pattern.png")
-
-
-@pytest.fixture()
-def pattern(pattern_path):
-    print(pattern_path)
-    return lackey.Pattern(pattern_path)
-
-
 class TestMouseMethods(object):
 
     def test_movement(self, mouse):
@@ -599,7 +568,6 @@ def has_method(cls, mthd, args=0):
     assert callable(getattr(cls, mthd, None))
     if args > 0:
         assert len(inspect.getargspec(getattr(cls, mthd))[0]) == args
-
 
 if __name__ == '__main__':
     unittest.main()
