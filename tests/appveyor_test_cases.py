@@ -64,79 +64,85 @@ class TestKeyboardMethods(object):
         # you run this test, the SHIFT, CTRL, or ALT keys might not have been released
         # properly.
 
-class TestAppMethods(unittest.TestCase):
-    def test_getters(self):
-        if sys.platform.startswith("win"):
-            app = lackey.App("notepad.exe tests\\test_cases.py")
-            app2 = lackey.App("notepad.exe tests\\test_cases.py")
-            #app.setUsing("test_cases.py")
-            app.open()
-            app2.open()
-            lackey.sleep(1)
-            app2.close()
-            app.focus()
-            assert app.getName() == "notepad.exe"
-            assert app.isRunning()
-            assert re.search("test_cases(.py)? - Notepad", app.getWindow())
-            assert app.getPID() != -1
-            region = app.window()
-            assert isinstance(region, lackey.Region)
-            assert region.getW() > 0
-            assert region.getH() > 0
-            app.close()
-        elif sys.platform == "darwin":
-            if "TRAVIS" in os.environ:
-                return # Skip these tests in travis build environment
-            a = lackey.App("+open -a TextEdit tests/test_cases.py")
-            a2 = lackey.App("open -a TextEdit tests/appveyor_test_cases.py")
-            lackey.sleep(1)
-            app = lackey.App("test_cases.py")
-            app2 = lackey.App("appveyor_test_cases.py")
-            #app.setUsing("test_cases.py")
-            lackey.sleep(1)
-            app2.close()
-            app.focus()
-            print(app.getPID())
-            assert app.isRunning()
-            assert app.getName()[-len("TextEdit"):] == "TextEdit"
-            #self.assertEqual(app.getWindow(), "test_cases.py") # Doesn't work on `open`-triggered apps
-            assert app.getPID() != -1
-            region = app.window()
-            assert isinstance(region, lackey.Region)
-            assert region.getW() > 0
-            assert region.getH() > 0
-            app.close()
-        else:
-            raise NotImplementedError("Platforms supported include: Windows, OS X")
+class TestAppMethods(object):
 
-    def test_launchers(self):
-        if sys.platform.startswith("win"):
-            app = lackey.App("notepad.exe")
-            app.setUsing("tests\\test_cases.py")
-            app.open()
-            lackey.wait(1)
-            assert app.getName() == "notepad.exe"
-            assert app.isRunning()
-            assert re.search("test_cases(.py)? - Notepad", app.getWindow())
-            assert app.getPID() != -1
-            app.close()
-            lackey.wait(0.9)
-        elif sys.platform.startswith("darwin"):
-            if "TRAVIS" in os.environ:
-                return # Skip these tests in travis build environment
-            a = lackey.App("open")
-            a.setUsing("-a TextEdit tests/test_cases.py")
-            a.open()
-            lackey.wait(1)
-            app = lackey.App("test_cases.py")
-            assert app.isRunning()
-            assert app.getName()[-len("TextEdit"):] == "TextEdit"
-            #self.assertEqual(app.getWindow(), "test_cases.py")  # Doesn't work on `open`-triggered apps
-            assert app.getPID() != -1
-            app.close()
-            lackey.wait(0.9)
-        else:
-            raise NotImplementedError("Platforms supported include: Windows, OS X")
+    @pytest.mark.skipif(not sys.platform.startswith("win"),
+                        reason="Tests Windows feature")
+    def test_windows_getters(self):
+        app = lackey.App("notepad.exe tests\\test_cases.py")
+        app2 = lackey.App("notepad.exe tests\\test_cases.py")
+        #app.setUsing("test_cases.py")
+        app.open()
+        app2.open()
+        lackey.sleep(1)
+        app2.close()
+        app.focus()
+        assert app.getName() == "notepad.exe"
+        assert app.isRunning()
+        assert re.search("test_cases(.py)? - Notepad", app.getWindow())
+        assert app.getPID() != -1
+        region = app.window()
+        assert isinstance(region, lackey.Region)
+        assert region.getW() > 0
+        assert region.getH() > 0
+        app.close()
+
+    @pytest.mark.skipif(not sys.platform == "darwin",
+                        reason="Tests OSX feature")
+    @pytest.mark.skipif("TRAVIS" in os.environ,
+                        reason="Skip these tests in travis build environment")
+    def test_osx_getters(self):
+        a = lackey.App("+open -a TextEdit tests/test_cases.py")
+        a2 = lackey.App("open -a TextEdit tests/appveyor_test_cases.py")
+        lackey.sleep(1)
+        app = lackey.App("test_cases.py")
+        app2 = lackey.App("appveyor_test_cases.py")
+        #app.setUsing("test_cases.py")
+        lackey.sleep(1)
+        app2.close()
+        app.focus()
+        print(app.getPID())
+        assert app.isRunning()
+        assert app.getName()[-len("TextEdit"):] == "TextEdit"
+        #self.assertEqual(app.getWindow(), "test_cases.py") # Doesn't work on `open`-triggered apps
+        assert app.getPID() != -1
+        region = app.window()
+        assert isinstance(region, lackey.Region)
+        assert region.getW() > 0
+        assert region.getH() > 0
+        app.close()
+
+    @pytest.mark.skipif(not sys.platform.startswith("win"),
+                        reason="Tests Windows feature")
+    def test_windows_launchers(self):
+        app = lackey.App("notepad.exe")
+        app.setUsing("tests\\test_cases.py")
+        app.open()
+        lackey.wait(1)
+        assert app.getName() == "notepad.exe"
+        assert app.isRunning()
+        assert re.search("test_cases(.py)? - Notepad", app.getWindow())
+        assert app.getPID() != -1
+        app.close()
+        lackey.wait(0.9)
+
+    @pytest.mark.skipif(not sys.platform == "darwin",
+                        reason="Tests OSX feature")
+    @pytest.mark.skipif("TRAVIS" in os.environ,
+                        reason="Skip these tests in travis build environment")
+    def test_osx_launchers(self):
+        a = lackey.App("open")
+        a.setUsing("-a TextEdit tests/test_cases.py")
+        a.open()
+        lackey.wait(1)
+        app = lackey.App("test_cases.py")
+        assert app.isRunning()
+        assert app.getName()[-len("TextEdit"):] == "TextEdit"
+        #self.assertEqual(app.getWindow(), "test_cases.py")  # Doesn't work on `open`-triggered apps
+        assert app.getPID() != -1
+        app.close()
+        lackey.wait(0.9)
+
 
 class TestScreenMethods(object):
 
