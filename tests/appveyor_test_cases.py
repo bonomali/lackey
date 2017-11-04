@@ -352,8 +352,8 @@ class TestRegionMethods(object):
 
 
 @pytest.mark.usefixtures("screen")
-class TestObserverEventMethods(unittest.TestCase):
-    def setUp(self):
+class TestObserverEventMethods(object):
+    def setup_method(self, method):
         self.generic_event = lackey.ObserveEvent(screen, event_type="GENERIC")
         self.appear_event = lackey.ObserveEvent(screen, event_type="APPEAR")
         self.vanish_event = lackey.ObserveEvent(screen, event_type="VANISH")
