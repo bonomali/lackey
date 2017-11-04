@@ -1,6 +1,5 @@
 import inspect
 import subprocess
-import unittest
 import numpy
 import time
 import sys
@@ -568,6 +567,3 @@ def has_method(cls, mthd, args=0):
     assert callable(getattr(cls, mthd, None))
     if args > 0:
         assert len(inspect.getargspec(getattr(cls, mthd))[0]) == args
-
-if __name__ == '__main__':
-    unittest.main()
