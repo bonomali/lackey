@@ -196,19 +196,17 @@ class TestComplexFeatures(unittest.TestCase):
         except lackey.FindFailed:
             self.fail("Incorrectly threw FindFailed exception; should have skipped")
 
-@unittest.skip("Requires user intervention")
-class TestRasterMethods(unittest.TestCase):
-    def setUp(self):
-        self.r = lackey.Screen(0)
+@pytest.mark.skip(reason="Requires user intervention")
+class TestRasterMethods(object):
 
-    def testRaster(self):
+    def testRaster(self, screen):
         # This should preview the specified sections of the primary screen.
-        self.r.debugPreview("Full screen")
-        self.r.get(lackey.Region.NORTH).debugPreview("Top half")
-        self.r.get(lackey.Region.SOUTH).debugPreview("Bottom half")
-        self.r.get(lackey.Region.NORTH_WEST).debugPreview("Upper right corner")
-        self.r.get(522).debugPreview("Center (small)")
-        self.r.get(lackey.Region.MID_BIG).debugPreview("Center (half)")
+        screen.debugPreview("Full screen")
+        screen.get(lackey.Region.NORTH).debugPreview("Top half")
+        screen.get(lackey.Region.SOUTH).debugPreview("Bottom half")
+        screen.get(lackey.Region.NORTH_WEST).debugPreview("Upper right corner")
+        screen.get(522).debugPreview("Center (small)")
+        screen.get(lackey.Region.MID_BIG).debugPreview("Center (half)")
 
 if __name__ == '__main__':
     unittest.main()
