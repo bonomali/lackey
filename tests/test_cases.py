@@ -66,8 +66,10 @@ class TestKeyboardMethods(object):
             type_and_check_equals(code, OUTPUTS[code])
 
 
-class TestComplexFeatures(unittest.TestCase):
-    def setUp(self):
+class TestComplexFeatures(object):
+
+    @classmethod
+    def setup_class(cls):
         lackey.addImagePath(os.path.dirname(__file__))
         lackey.Screen(0).hover()
         lackey.Screen(0).click()
@@ -81,40 +83,39 @@ class TestComplexFeatures(unittest.TestCase):
         except lackey.FindFailed:
             pass
 
-    def testTypeCopyPaste(self):
+    def testTypeCopyPaste(self, screen):
         """ Also tests the log file """
         lackey.Debug.setLogFile("logfile.txt")
-        r = lackey.Screen(0)
         if sys.platform.startswith("win"):
             app = lackey.App("notepad.exe").open()
             time.sleep(1)
-            r.type("This is a Test")
-            r.type("a", lackey.Key.CTRL) # Select all
-            r.type("c", lackey.Key.CTRL) # Copy
-            assert r.getClipboard() == "This is a Test"
-            r.type("{DELETE}") # Clear the selected text
-            r.paste("This, on the other hand, is a {SHIFT}broken {SHIFT}record.") # Paste should ignore special characters and insert the string as is
-            r.type("a", lackey.Key.CTRL) # Select all
-            r.type("c", lackey.Key.CTRL) # Copy
-            assert r.getClipboard() == "This, on the other hand, is a {SHIFT}broken {SHIFT}record."
+            screen.type("This is a Test")
+            screen.type("a", lackey.Key.CTRL) # Select all
+            screen.type("c", lackey.Key.CTRL) # Copy
+            assert screen.getClipboard() == "This is a Test"
+            screen.type("{DELETE}") # Clear the selected text
+            screen.paste("This, on the other hand, is a {SHIFT}broken {SHIFT}record.") # Paste should ignore special characters and insert the string as is
+            screen.type("a", lackey.Key.CTRL) # Select all
+            screen.type("c", lackey.Key.CTRL) # Copy
+            assert screen.getClipboard() == "This, on the other hand, is a {SHIFT}broken {SHIFT}record."
         elif sys.platform == "darwin":
             app = lackey.App("+open -e")
             lackey.sleep(2)
-            #r.debugPreview()
-            r.wait(lackey.Pattern("preview_open_2.png"))
-            r.click(lackey.Pattern("preview_open_2.png"))
+            #screen.debugPreview()
+            screen.wait(lackey.Pattern("preview_open_2.png"))
+            screen.click(lackey.Pattern("preview_open_2.png"))
             lackey.type("n", lackey.KeyModifier.CMD)
             time.sleep(1)
             app = lackey.App("Untitled")
-            r.type("This is a Test")
-            r.type("a", lackey.KeyModifier.CMD) # Select all
-            r.type("c", lackey.KeyModifier.CMD) # Copy
-            assert r.getClipboard() == "This is a Test"
-            r.type("{DELETE}") # Clear the selected text
-            r.paste("This, on the other hand, is a {SHIFT}broken {SHIFT}record.") # Paste should ignore special characters and insert the string as is
-            r.type("a", lackey.KeyModifier.CMD) # Select all
-            r.type("c", lackey.KeyModifier.CMD) # Copy
-            assert r.getClipboard() == "This, on the other hand, is a {SHIFT}broken {SHIFT}record."
+            screen.type("This is a Test")
+            screen.type("a", lackey.KeyModifier.CMD) # Select all
+            screen.type("c", lackey.KeyModifier.CMD) # Copy
+            assert screen.getClipboard() == "This is a Test"
+            screen.type("{DELETE}") # Clear the selected text
+            screen.paste("This, on the other hand, is a {SHIFT}broken {SHIFT}record.") # Paste should ignore special characters and insert the string as is
+            screen.type("a", lackey.KeyModifier.CMD) # Select all
+            screen.type("c", lackey.KeyModifier.CMD) # Copy
+            assert screen.getClipboard() == "This, on the other hand, is a {SHIFT}broken {SHIFT}record."
         else:
             raise NotImplementedError("Platforms supported include: Windows, OS X")
 
@@ -124,7 +125,7 @@ class TestComplexFeatures(unittest.TestCase):
 
         assert os.path.exists("logfile.txt")
 
-    def testOpenApp(self):
+    def testOpenApp(self, screen):
         """ This looks for the specified Notepad icon on the desktop.
 
         This test will probably fail if you don't have the same setup I do.
@@ -135,64 +136,63 @@ class TestComplexFeatures(unittest.TestCase):
             region = appear_event.getRegion()
             region.TestFlag = True
             region.stopObserver()
-        r = lackey.Screen(0)
-        if sys.platform.startswith("win"):
-            r.doubleClick("notepad.png")
-        elif sys.platform == "darwin":
-            r.doubleClick("textedit.png")
-            r.wait("preview_open_2.png")
-            r.type("n", lackey.KeyModifier.CMD)
-        time.sleep(2)
-        r.type("This is a test")
-        if sys.platform.startswith("win"):
-            r.onAppear(lackey.Pattern("test_text.png").similar(0.6), test_observer)
-        elif sys.platform == "darwin":
-            r.onAppear(lackey.Pattern("mac_test_text.png").similar(0.6), test_observer)
-        r.observe(30)
-        assert r.TestFlag
-        assert r.getTime() > 0
-        if sys.platform.startswith("win"):
-            r.rightClick(r.getLastMatch())
-            r.click("select_all.png")
-            r.type("c", lackey.Key.CTRL) # Copy
-        elif sys.platform == "darwin":
-            r.type("a", lackey.KeyModifier.CMD)
-            r.type("c", lackey.KeyModifier.CMD)
-        assert r.getClipboard() == "This is a test"
-        r.type("{DELETE}")
-        if sys.platform.startswith("win"):
-            r.type("{F4}", lackey.Key.ALT)
-        elif sys.platform == "darwin":
-            r.type("w", lackey.KeyModifier.CMD)
-            r.click(lackey.Pattern("textedit_save_2.png").targetOffset(-86, 25))
-            lackey.sleep(0.5)
-            r.type("q", lackey.KeyModifier.CMD)
 
-    def testDragDrop(self):
+        if sys.platform.startswith("win"):
+            screen.doubleClick("notepad.png")
+        elif sys.platform == "darwin":
+            screen.doubleClick("textedit.png")
+            screen.wait("preview_open_2.png")
+            screen.type("n", lackey.KeyModifier.CMD)
+        time.sleep(2)
+        screen.type("This is a test")
+        if sys.platform.startswith("win"):
+            screen.onAppear(lackey.Pattern("test_text.png").similar(0.6), test_observer)
+        elif sys.platform == "darwin":
+            screen.onAppear(lackey.Pattern("mac_test_text.png").similar(0.6), test_observer)
+        screen.observe(30)
+        assert screen.TestFlag
+        assert screen.getTime() > 0
+        if sys.platform.startswith("win"):
+            screen.rightClick(screen.getLastMatch())
+            screen.click("select_all.png")
+            screen.type("c", lackey.Key.CTRL) # Copy
+        elif sys.platform == "darwin":
+            screen.type("a", lackey.KeyModifier.CMD)
+            screen.type("c", lackey.KeyModifier.CMD)
+        assert screen.getClipboard() == "This is a test"
+        screen.type("{DELETE}")
+        if sys.platform.startswith("win"):
+            screen.type("{F4}", lackey.Key.ALT)
+        elif sys.platform == "darwin":
+            screen.type("w", lackey.KeyModifier.CMD)
+            screen.click(lackey.Pattern("textedit_save_2.png").targetOffset(-86, 25))
+            lackey.sleep(0.5)
+            screen.type("q", lackey.KeyModifier.CMD)
+
+    def testDragDrop(self, screen):
         """ This relies on two specific icons on the desktop.
 
         This test will probably fail if you don't have the same setup I do.
         """
-        r = lackey.Screen(0)
         if sys.platform.startswith("win"):
-            r.dragDrop("test_file_txt.png", "notepad.png")
-            assert r.exists("test_file_txt.png")
-            r.type("{F4}", lackey.Key.ALT)
+            screen.dragDrop("test_file_txt.png", "notepad.png")
+            assert screen.exists("test_file_txt.png")
+            screen.type("{F4}", lackey.Key.ALT)
         elif sys.platform == "darwin":
-            r.dragDrop("test_file_rtf.png", "textedit.png")
-            assert r.exists("test_file_rtf.png")
-            r.type("w", lackey.KeyModifier.CMD)
-            r.type("q", lackey.KeyModifier.CMD)
+            screen.dragDrop("test_file_rtf.png", "textedit.png")
+            assert screen.exists("test_file_rtf.png")
+            screen.type("w", lackey.KeyModifier.CMD)
+            screen.type("q", lackey.KeyModifier.CMD)
 
-    def testFindFailed(self):
+    def testFindFailed(self, screen):
         """ Sets up a region (which should not have the target icon) """
 
-        r = lackey.Screen(0).get(lackey.Region.NORTH_EAST)
+        screen = screen.get(lackey.Region.NORTH_EAST)
         with pytest.raises(lackey.FindFailed) as context:
-            r.find("notepad.png")
-        r.setFindFailedResponse(r.SKIP)
+            screen.find("notepad.png")
+        screen.setFindFailedResponse(screen.SKIP)
         try:
-            r.find("notepad.png")
+            screen.find("notepad.png")
         except lackey.FindFailed:
             self.fail("Incorrectly threw FindFailed exception; should have skipped")
 
